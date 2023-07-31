@@ -9,41 +9,43 @@ using namespace std;
 // {
 //  	return (sizeof(array) / sizeof(array[0]));
 // }
-
-static unsigned int process(unsigned int jobMaxLen,unsigned int jobArrayLen,unsigned int jobArray[])
+namespace eleven
 {
-    unsigned int num = 0, extraTime = 0;
-    for (unsigned int i = 0; i < jobArrayLen; i++)
+    static int process(int jobMaxLen,int jobArrayLen,int jobArray[])
     {
-        if (jobArray[i] + num > jobMaxLen)
-            num = jobArray[i] + num - jobMaxLen;
-        else
-            num = 0;     
+        int num = 0, extraTime = 0;
+        for (int i = 0; i < jobArrayLen; i++)
+        {
+            if (jobArray[i] + num > jobMaxLen)
+                num = jobArray[i] + num - jobMaxLen;
+            else
+                num = 0;     
+        }
+
+        extraTime = num % jobMaxLen > 0 ? num/jobMaxLen + 1 : num/jobMaxLen;
+
+        return num > 0 ? jobArrayLen + extraTime : jobArrayLen;
     }
 
-    extraTime = num % jobMaxLen > 0 ? num/jobMaxLen + 1 : num/jobMaxLen;
+    int test1()
+    {
+        int jobNum = 3, jobMaxLen = 5;
+        int jobArray[] = {1, 2, 3, 4, 5};
+        int result = process(jobNum, jobMaxLen, jobArray);
+        return 0; 
+    }
 
-    return num > 0 ? jobArrayLen + extraTime : jobArrayLen;
-}
+    int test2()
+    {
+        int jobNum1 = 4, jobMaxLen1 = 5;
+        int jobArray1[] = {5, 4, 1, 1, 1};
+        int result2 = process(jobNum1, jobMaxLen1, jobArray1);
+    }
 
-int test1()
-{
-    unsigned int jobNum = 3, jobMaxLen = 5;
-    unsigned int jobArray[] = {1, 2, 3, 4, 5};
-    unsigned int result = process(jobNum, jobMaxLen, jobArray);
-    return 0; 
-}
-
-int test2()
-{
-    unsigned int jobNum1 = 4, jobMaxLen1 = 5;
-    unsigned int jobArray1[] = {5, 4, 1, 1, 1};
-    unsigned int result2 = process(jobNum1, jobMaxLen1, jobArray1);
-}
-
-int test()
-{
-    test1();
-    test2();
-    return 0; 
+    int test()
+    {
+        test1();
+        test2();
+        return 0; 
+    }
 }

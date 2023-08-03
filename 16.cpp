@@ -7,39 +7,74 @@
 #include <iostream>
 using namespace std;
 #include <map>
+#include <vector>
+#include <algorithm>
 
 namespace sixteen
 {
-    std::map<char, int> g_mapChar;
+    bool cmp(pair<char, int> pairFirst, pair<char, int> pairSecond)
+    {
+        return pairFirst.second > pairSecond.second;
+    }
 
     std::string process(const std::string& str)
     {
+        std::map<char, int> mapCharFirst;
+        std::map<char, int> mapCharSecond;
         std::string resultFirst = "", resultSecond = "";
-        g_mapChar.clear();
+        mapCharFirst.clear();
+        mapCharSecond.clear();
+
         for (int i = 0; i < str.length(); i++)
         {
             char key = str[i];
-            if (g_mapChar.count(key))
+           if (key >= 'a' && key <= 'z')
             {
-                g_mapChar[key]++;
+                if (mapCharFirst.count(key))
+                {
+                    mapCharFirst[key]++;
+                }
+                else
+                {
+                    mapCharFirst[key] = 1;
+                }
             }
-            else
+            else if (key >= 'A' && key <= 'Z')
             {
-                g_mapChar[key] = 1;
+                if (mapCharSecond.count(key))
+                {
+                    mapCharSecond[key]++;
+                }
+                else
+                {
+                    mapCharSecond[key] = 1;
+                }
             }
+        
         }
-        for (std::map<char, int>::const_iterator it = g_mapChar.begin(); it != g_mapChar.end(); ++it)
+        std::vector<pair<char, int>> vecFirst, vecSecond;
+        for(map<char, int>::iterator it = mapCharFirst.begin(); it != mapCharFirst.end(); it++)
         {
-            if (it->first >= 'a')
-            {
-                resultFirst.push_back(it->first);
-                resultFirst += ':' + std::to_string(it->second) + ';';
-            }
-            else
-            {
-                resultSecond.push_back(it->first);
-                resultSecond += ':' + std::to_string(it->second) + ';';
-            }
+            vecFirst.push_back(pair<char, int>(it->first,it->second));
+        }
+        sort(vecFirst.begin(),vecFirst.end(),cmp);
+
+        for(map<char, int>::iterator it = mapCharSecond.begin(); it != mapCharSecond.end(); it++)
+        {
+            vecSecond.push_back(pair<char, int>(it->first,it->second));
+        }
+        sort(vecSecond.begin(),vecSecond.end(),cmp);
+
+        for (std::vector<pair<char, int>>::const_iterator it = vecFirst.begin(); it != vecFirst.end(); it++)
+        {
+            resultFirst.push_back(it->first);
+            resultFirst += ':' + std::to_string(it->second) + ';';
+        }
+
+        for (std::vector<pair<char, int>>::const_iterator it = vecSecond.begin(); it != vecSecond.end(); it++)
+        {
+            resultSecond.push_back(it->first);
+            resultSecond += ':' + std::to_string(it->second) + ';';
         }
 
         return resultFirst + resultSecond;
@@ -47,6 +82,8 @@ namespace sixteen
 
     void test()
     {
+        std::string str1 = "abababb";
+        std::string strResult1 = process(str1);
         std::string str = "xyxyXX";
         std::string strResult = process(str);
     }
